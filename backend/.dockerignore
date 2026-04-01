@@ -1,0 +1,12 @@
+data/
+workshop.db*
+imagenes/
+uploads/
+__pycache__/
+venv/
+*.pyc
+*.pyo
+*.pyd
+.env
+.git
+.gitignore

@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  api-taller:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taller_backend
+    volumes:
+      # RUTA DEFINITIVA A TUS FOTOS Y BASE DE DATOS
+      - c:/servidor_taller/taller_data:/app/data
+    environment:
+      - DATABASE_PATH=/app/data/db/workshop.db
+      - DATA_BASE_PATH=/app/data
+    restart: always
+
+  frontend-taller:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taller_frontend
+    depends_on:
+      - api-taller
+    restart: always
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: taller-tunnel
+    restart: always
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=eyJhIjoiMGQ2ZGI2ZWY0MDFmOTU3YTY0ODlmOWY4ZmQ1N2I1NzgiLCJ0IjoiN2Y5OTlmZDktMDdiYS00M2EzLTlhZmYtZmRlZmRiNWU4ZWJlIiwicyI6Ik56azJNbVkyWVRNdE1UZG1OQzAwWmpBNExXRTNPV0l0TXpJM056azFaRFUyWkdKaCJ9
+    depends_on:
+      - frontend-taller
